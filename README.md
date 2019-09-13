@@ -53,8 +53,30 @@ As a real metagenomic dataset, the three CAMI synthetic metagenome challenge set
 differential abundance (M), and High complexity with time series (H)). These datasets are publicly available in 
 [GigaDB](http://gigadb.org/dataset/100344). 
 
+### Assembly and Contig BAM generation
+TODO - SPAdes and minimap2? or Bowtie2? 
 
 ### Binning tools and Commands
+
+#### BinSanity
+Unsupervised clustering of environmental microbial assemblies using coverage and affinity propagation. Published by [Graham et al., 2017](https://peerj.com/articles/3035/). BinSanity is a **abundance based/hybrid** methods that takes as input a metagenomic assembly, in FASTA format, and a BAM file of the metagenomic reads mapped to the assembly. The sequence composition model is computd by utilizing the percentage of GC and tetranucleotide frequencies, and the differential abundace model takes the mapping results and log transforms the coverage matrix computed from those. The initial set of clusters is determined by coverage, feeding into the affinity propagation (AP) clustering algorythm, using the minimum euclidean distance as a stopping criteria. The %GC and tetranucleotide frequency matrix can be used **optionally** in a second refinement step to recluster contigs from high contamination and low complexion bins. 
+
+Source code: https://github.com/edgraham/BinSanity (last update: 20 Jun 2019
+Container image: 
+
+#### CONCOCT
+#### GroopM
+#### MaxBin
+#### MaxBin2
+#### MetaBAT
+#### MetaBAT2
+#### MetaProb
+#### MetaWatt
+#### lattice-metage
+#### MrGBP
+#### MyCC
+#### VAMB
+#### YAMB
 
 ### Assessing Binning success
 
