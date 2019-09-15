@@ -34,3 +34,7 @@ metabat2 --inFile ../contigs.fasta --outFile metabat2 --unbinned -t 16 # retry u
 # myCC
 srun --pty --nodes=1 --cpus-per-task=16 --mem-per-cpu=6 --tasks-per-node=1 shifter --image=990210oliver/mycc.docker:v1
 MyCC.py ../BinSanity/contigs.fasta -a ../BinSanity/out.cov.cov -meta -mask
+
+# vamb
+srun --pty --nodes=1 --cpus-per-task=16 --mem-per-cpu=6 --tasks-per-node=1 shifter --image=cimendes/vamb:2.0.1-1
+vamb --outdir vambout --fasta ../contigs.fasta --bamfiles ../sorted.bam
