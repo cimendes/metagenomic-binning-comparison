@@ -21,3 +21,7 @@ concoct --composition_file contigs_10K.fa --coverage_file coverage_table.tsv -b 
 merge_cutup_clustering.py concoct_output/clustering_gt1000.csv > concoct_output/clustering_merged.csv
 mkdir concoct_output/fasta_bins
 extract_fasta_bins.py original_contigs.fa concoct_output/clustering_merged.csv --output_path concoct_output/fasta_bins
+
+# MaxBin2
+srun --pty --nodes=1 --cpus-per-task=16 --mem-per-cpu=6 --tasks-per-node=1 shifter --image=
+groopm parse
