@@ -120,51 +120,84 @@ approach is also implemented. Variational approximation used to perform integral
 * Source code: https://github.com/BinPro/CONCOCT (last update: 25/02/2019)
 * Container image: `flowcraft/concoct:1.0.0-1`
 
-#### GroopM
-It's an automated binning tool that primarily uses differential coverage to obtain hight fidelity population genomes 
-from related metagenomes. It takes as input assembled contigs and BAM files, and it was published by 
-[Imelfort et al., 2014](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4183954/). 
-This tool, also an  **hybrid** binner, uses tetranucleotide frequencies, dimensionally reduction using principal c
-omponent analysis to keep 80% of the compositional variance to compute the sequence composition, and transformed 
-coverage space to reduce uneveness of variability distribution. The iteractive clustering is divided in two custom 
-steps: two-way clustering and Hough partitioning and bin refinement using self-organizing map. This algorithm is stopped 
-when 1:1 correspondance between bins and sub regions on the SOM surface is reached. It also employs a GC variance model 
-for chimera detection.
-
-* Source code: https://github.com/Ecogenomics/GroopM (last update: 26/04/2016)
-* Container image: `cimendes/groopm:0.3.5-1`
-
-#### MaxBin
-It's the first iteration of binners based on an Expectation-Maximization algorithm and it was published by 
-[Wu et al., 2014](https://microbiomejournal.biomedcentral.com/articles/10.1186/2049-2618-2-26). It's also an **hybrid** 
-assembler, taking as input contgs and raw reads or and abundance profile. Tetranucleotide frequencies are extracted 
+#### MaxBin2
+The second iteration of the MaxBin tool, published a two years later by 
+[Wu et al., 2016](https://academic.oup.com/bioinformatics/article/32/4/605/1744462), allowing for co-assembled genomes. 
+It's an **hybrid** assembler, taking as input contgs and raw reads or and abundance profile. Tetranucleotide frequencies are extracted 
 from the sequences, and Euclidean distance, empirically estimated Gaussian distributions of intra- and inter-genome 
 distances are calculated. The coverage model is computed through a Poisson distribution. An Expectation-maximization 
 algorithm is used to cluster the sequences, with an initial cluster number estimated from 107 single-copy genes 
 (Dupont et al 2012)(alternatively 40 bacteria and archea single copy gene database can be used). Initial parameters 
 inferred from the shortest marker gene. The stopping criteria is parameter convergence and maximum iteration number (50 
 by default). The bins are recursively checked for median number of marker genes and completness and contamination is 
-reported based on these markers.
-
-* Source code: https://sourceforge.net/projects/maxbin/ (last update: 22/06/2019)
-* Container image: `flowcraft/maxbin2:2.2.4-1`
-
-#### MaxBin2
-The second iteration of the MaxBin tool, published a two years later by 
-[Wu et al., 2016](https://academic.oup.com/bioinformatics/article/32/4/605/1744462), allowing for co-assembled genomes. 
+reported based on these markers. 
 
 * Source code: https://sourceforge.net/projects/maxbin2/ (last update: 22/06/2019)
 * Container image: `flowcraft/maxbin2:2.2.4-1`
 
-#### MetaBAT
 #### MetaBAT2
+Published by [Kang et al., 2019](https://peerj.com/articles/7359/), it's the second iteration of the MetaBAT tool as 
+an effort to overcome MetaBAT's limitation of having to set the initial parameters. MetaBAT2 is an **hybrid** binner 
+that integrates empitical probabilistic distances of genome abundance and tetranucleotide frequency for accurate 
+metagenome binning. Sequence composition is computed by rank-normalized tetranucleotide frequencies, Euclidean 
+distance and empirical posterior probability derived from different contig sizes using logistic regression. 
+It also computes an abundance correlation score (for 3 samples or more). Abundance distance defined as the non-shared 
+area of two normal distributions. It implements graph-based structure for contig clustering. with an iterative procedure 
+of graph building and graph partitioning using a modified laber propagation algorithm. The stopping criteria is 
+graph maximization. Additionally, there's a progressive wighting of the relative importance of Distance Abundance vs 
+Tetranucleotide frequency based on the number of samples. There's an optional assembly, based on checkM assessment, 
+of mapped reads from the single most represented sample to reduce contamination. 
+
+* Source code: https://bitbucket.org/berkeleylab/metabat (last update: 12/06/2019)
+* Container image: `cimendes/metabat2:2.13-33-g236d20e-1`
+
 #### MetaProb
-#### MetaWatt
-#### lattice-metage
-#### MrGBP
+Metagenomic reads binning based on probabilistic sequence signatures. This binner, unlike the majority of the tools 
+available, utilizes the reads directly. It was published by [Girotto et al., 2016](https://academic.oup.com/bioinformatics/article/32/17/i567/2450796).
+This *composition based* binner progressively merges reads together based on the extent of their overlap (shared q-mers). 
+Each group is represented by a set of independent reads on which the k-mer frequency distribution is computed. 
+Clustering of groups is based on their signature with the k-means algorithm., with the number of clusters estimated by 
+Kolmogorov-Smirnov test. Each time a cluster passes the Kolmogorov-Smirnov test, the corresponding reads are removed and 
+the other clusters are split. The test is repeated until no data is left. 
+
+* Source code: https://bitbucket.org/samu661/metaprob/src (last update: 03/12/2018)
+* Container image: `cimendes/metaprob:2-1`
+
 #### MyCC
+Published by [Lin & Liao, 2016](https://www.nature.com/articles/srep24175), this **composition bases** binner extracts genomic signatures by calculating the count of occurrences 
+for every kmer (default tetranucleotides) followed by normalization ang centered log-ratio tranformation. Dimension 
+reduction of the frequencies by Barnes-Hut-SNE. The matrix is then clustered by affinity propagation, stopping when 
+minimum euclidean distance between pairs of datapoints is reached. Bin refinement step implemented with 40 universal 
+prokaryotic phylogenetic marker genes (Ciccareli et al, 2006). 
+
+* Source code: https://sourceforge.net/projects/sb2nhri/files/MyCC/ (last update: 15/03/2017)
+* Container image: `990210oliver/mycc.docker:v1`
+
 #### VAMB
+VAMB, Variational Autoencoder for Metagenomic Binning, is an **hybrid** binner published as pre-print by 
+[Nissen et al., 2018](https://www.biorxiv.org/content/10.1101/490078v2). It takes as input the assembled contigs and 
+the BAM files of the reads mapped to the assembly. Sequence composition is encoded as a matrix of tetranucleotide 
+frequencies, and abundance given in reads per kilobase contig per million mapped reads (RPKM). 
+The variational autoencoder (VE) is trained for 500 epochs with TNF and abundance table as input. VE has two hidden 
+layers, encoding the the data as a multivariate Gaussian latent distribution. DNA sequences and co-abundance are 
+encoded to the mean of their latent distribution. This distribution is randomly sampled to estimate a threshold for 
+the clustering based on pearson distance between contigs. Meedoid  covergence (iterative medoid clustering) is used to 
+construct final bins. 
+
+* Source code: https://github.com/RasmussenLab/vamb (last update: 13/09/2019)
+* Container image: `cimendes/vamb:2.0.1-1`
+
 #### YAMB
+YAMB implementes metagenome binning using nonlinear dimensionality reduction and density-based clustering, and was 
+published as a preprint by [Korzhenkov, 2019](https://www.biorxiv.org/content/10.1101/521286v1). It requires as input 
+the sequencing reads and a metagenomic assembly. The sequence data is encoded as tetranucleotide frequencies for each 
+contig fragment (10000 bp default). Mean coverage of fragments is calculated by samtools, then a matrix is created where 
+rows correspond to contig fragments and columns to tetranucleotide occurences and fragment mean coverage. This matrix is 
+dimensionality scaled using t-SNE (t-distributed stochastic neighbour embeding) performed on normalized data. 
+Subsequent clustering with HDBSCAN to obtain the bins. 
+
+* Source code: https://github.com/laxeye/YAMB (last update: 14/03/2019)
+* Container image: `cimendes/yamb:1-1`
 
 ### Assessing Binning success
 

@@ -31,6 +31,9 @@ srun --pty --nodes=1 --cpus-per-task=16 --mem-per-cpu=6 --tasks-per-node=1 shift
 jgi_summarize_bam_contig_depths ../sorted.bam --referenceFasta ../contigs.fasta > depth_file.tsv
 metabat2 --inFile ../contigs.fasta --outFile metabat2 --unbinned -t 16 # retry using the -a file
 
+# metaprob
+srun --pty --nodes=1 --cpus-per-task=16 --mem-per-cpu=6 --tasks-per-node=1 shifter --image=cimendes/metaprob:2-1
+
 # myCC
 srun --pty --nodes=1 --cpus-per-task=16 --mem-per-cpu=6 --tasks-per-node=1 shifter --image=990210oliver/mycc.docker:v1
 MyCC.py ../BinSanity/contigs.fasta -a ../BinSanity/out.cov.cov -meta -mask
