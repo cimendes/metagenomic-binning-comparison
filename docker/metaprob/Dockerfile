@@ -12,5 +12,5 @@ RUN wget https://bitbucket.org/samu661/metaprob/downloads/MetaProb_v2.tar.gz
 RUN tar xf MetaProb_v2.tar.gz && rm MetaProb_v2.tar.gz
 RUN cd MetaProb/Release && make all
 
-ENV PATH="NGStools/MetaProb/Release:$PATH"
+ENV PATH="NGStools/MetaProb/Release:$PATH"cd
 

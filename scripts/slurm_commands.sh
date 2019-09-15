@@ -23,5 +23,14 @@ mkdir concoct_output/fasta_bins
 extract_fasta_bins.py original_contigs.fa concoct_output/clustering_merged.csv --output_path concoct_output/fasta_bins
 
 # MaxBin2
-srun --pty --nodes=1 --cpus-per-task=16 --mem-per-cpu=6 --tasks-per-node=1 shifter --image=
-groopm parse
+srun --pty --nodes=1 --cpus-per-task=16 --mem-per-cpu=6 --tasks-per-node=1 shifter --image=cimendes/maxbin2:2.2.7-1
+run_MaxBin.pl -contig ../contigs.fasta -out out_maxbin2 -reads ~/Binning_assessment/Mock_in_silico/mockSample_fwd_shuffled.fastq.gz -reads2 ~/Binning_assessment/Mock_in_silico/mockSample_rev_shuffled.fastq.gz -thread 16
+
+# MetaBAT2
+srun --pty --nodes=1 --cpus-per-task=16 --mem-per-cpu=6 --tasks-per-node=1 shifter --image=cimendes/metabat2:2.13-33-g236d20e-1
+jgi_summarize_bam_contig_depths ../sorted.bam --referenceFasta ../contigs.fasta > depth_file.tsv
+metabat2 --inFile ../contigs.fasta --outFile metabat2 --unbinned -t 16 # retry using the -a file
+
+# myCC
+srun --pty --nodes=1 --cpus-per-task=16 --mem-per-cpu=6 --tasks-per-node=1 shifter --image=990210oliver/mycc.docker:v1
+MyCC.py ../BinSanity/contigs.fasta -a ../BinSanity/out.cov.cov -meta -mask
